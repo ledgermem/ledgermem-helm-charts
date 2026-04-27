@@ -1,0 +1,98 @@
+image:
+  repository: ghcr.io/ledgermem/api
+  tag: ""
+  pullPolicy: IfNotPresent
+  pullSecrets: []
+
+worker:
+  image:
+    repository: ghcr.io/ledgermem/worker
+    tag: ""
+
+replicaCount: 2
+workerReplicaCount: 1
+
+service:
+  type: ClusterIP
+  port: 80
+  targetPort: 4100
+
+ingress:
+  enabled: false
+  className: ""
+  host: memory.example.com
+  tls: true
+  annotations: {}
+
+resources:
+  api:
+    requests: { cpu: 500m, memory: 1Gi }
+    limits:   { cpu: 2,    memory: 4Gi }
+  worker:
+    requests: { cpu: 200m, memory: 512Mi }
+    limits:   { cpu: 1,    memory: 2Gi }
+
+apiKey:
+  create: true                  # generates a random API key into a secret
+  existingSecret: ""
+
+licenseKey: ""
+licenseKeySecretRef:
+  name: ""
+  key: license
+
+env:
+  LOG_LEVEL: info
+  EMBEDDING_MODEL: text-embedding-3-small
+
+postgres:
+  enabled: true
+  primary:
+    persistence:
+      enabled: true
+      size: 50Gi
+  auth:
+    database: ledgermem
+    username: ledgermem
+  image:
+    tag: 16-debian-12
+externalPostgres:
+  uri: ""
+
+redis:
+  enabled: true
+  architecture: standalone
+externalRedis:
+  uri: ""
+
+podDisruptionBudget:
+  enabled: false
+  minAvailable: 1
+
+networkPolicies:
+  enabled: false
+
+monitoring:
+  serviceMonitor: false
+  grafanaDashboards: false
+
+backup:
+  enabled: false
+  schedule: "0 2 * * *"
+  s3:
+    bucket: ""
+    region: ""
+    endpoint: ""
+    accessKeySecretRef:
+      name: ""
+      key: ""
+
+autoscaling:
+  enabled: false
+  minReplicas: 2
+  maxReplicas: 10
+  targetCPUUtilizationPercentage: 70
+
+nodeSelector: {}
+tolerations: []
+affinity: {}

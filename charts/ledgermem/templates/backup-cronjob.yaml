@@ -1,0 +1,46 @@
+{{- if .Values.backup.enabled -}}
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{ include "ledgermem.fullname" . }}-backup
+  labels:
+    {{- include "ledgermem.labels" . | nindent 4 }}
+spec:
+  schedule: {{ .Values.backup.schedule | quote }}
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          restartPolicy: OnFailure
+          containers:
+            - name: backup
+              image: ghcr.io/ledgermem/backup:latest
+              args:
+                - snapshot
+                - --to
+                - "s3://{{ .Values.backup.s3.bucket }}/$(date +%Y/%m/%d)/"
+              env:
+                - name: AWS_REGION
+                  value: {{ .Values.backup.s3.region | quote }}
+                {{- if .Values.backup.s3.endpoint }}
+                - name: AWS_ENDPOINT_URL
+                  value: {{ .Values.backup.s3.endpoint | quote }}
+                {{- end }}
+                {{- if .Values.backup.s3.accessKeySecretRef.name }}
+                - name: AWS_ACCESS_KEY_ID
+                  valueFrom:
+                    secretKeyRef:
+                      name: {{ .Values.backup.s3.accessKeySecretRef.name }}
+                      key: access-key-id
+                - name: AWS_SECRET_ACCESS_KEY
+                  valueFrom:
+                    secretKeyRef:
+                      name: {{ .Values.backup.s3.accessKeySecretRef.name }}
+                      key: secret-access-key
+                {{- end }}
+                - name: DATABASE_URL
+                  value: {{ include "ledgermem.databaseUri" . | quote }}
+{{- end }}

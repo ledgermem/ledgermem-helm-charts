@@ -1,0 +1,29 @@
+apiVersion: v2
+name: ledgermem
+description: Self-hosted LedgerMem Memory — long-term memory infrastructure for AI agents.
+type: application
+version: 0.1.0
+appVersion: "0.1.0"
+home: https://proofly.dev
+sources:
+  - https://github.com/ledgermem/ledgermem-helm-charts
+  - https://github.com/ledgermem/ledgermem-enterprise
+keywords:
+  - memory
+  - llm
+  - agents
+  - rag
+  - vector
+maintainers:
+  - name: LedgerMem
+    email: founders@proofly.dev
+icon: https://proofly.dev/og/index.svg
+dependencies:
+  - name: postgresql
+    version: 15.5.27
+    repository: https://charts.bitnami.com/bitnami
+    condition: postgres.enabled
+  - name: redis
+    version: 19.6.4
+    repository: https://charts.bitnami.com/bitnami
+    condition: redis.enabled

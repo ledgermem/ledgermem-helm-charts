@@ -1,0 +1,26 @@
+name: CI
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: azure/setup-helm@v4
+        with:
+          version: v3.14.4
+      - name: helm lint
+        run: helm lint charts/ledgermem
+      - name: helm template (default)
+        run: helm template charts/ledgermem | head -200
+      - name: helm template (production-like)
+        run: |
+          helm template charts/ledgermem \
+            --set autoscaling.enabled=true \
+            --set ingress.enabled=true \
+            --set monitoring.serviceMonitor=true \
+            --set podDisruptionBudget.enabled=true \
+            --set networkPolicies.enabled=true | head -300

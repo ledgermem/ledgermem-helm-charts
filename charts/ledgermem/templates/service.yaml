@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "ledgermem.fullname" . }}-api
+  labels:
+    {{- include "ledgermem.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - port: {{ .Values.service.port }}
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    {{- include "ledgermem.selectorLabels" . | nindent 4 }}
+    app.kubernetes.io/component: api

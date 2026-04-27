@@ -1,0 +1,36 @@
+{{/*
+Common helpers
+*/}}
+{{- define "ledgermem.name" -}}
+{{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" -}}
+{{- end -}}
+
+{{- define "ledgermem.fullname" -}}
+{{- if .Values.fullnameOverride -}}
+{{- .Values.fullnameOverride | trunc 63 | trimSuffix "-" -}}
+{{- else -}}
+{{- $name := default .Chart.Name .Values.nameOverride -}}
+{{- printf "%s-%s" .Release.Name $name | trunc 63 | trimSuffix "-" -}}
+{{- end -}}
+{{- end -}}
+
+{{- define "ledgermem.labels" -}}
+helm.sh/chart: {{ printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" }}
+app.kubernetes.io/name: {{ include "ledgermem.name" . }}
+app.kubernetes.io/instance: {{ .Release.Name }}
+app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
+app.kubernetes.io/managed-by: {{ .Release.Service }}
+{{- end -}}
+
+{{- define "ledgermem.selectorLabels" -}}
+app.kubernetes.io/name: {{ include "ledgermem.name" . }}
+app.kubernetes.io/instance: {{ .Release.Name }}
+{{- end -}}
+
+{{- define "ledgermem.databaseUri" -}}
+{{- if .Values.externalPostgres.uri -}}
+{{ .Values.externalPostgres.uri }}
+{{- else -}}
+postgresql://{{ .Values.postgres.auth.username }}:$(POSTGRES_PASSWORD)@{{ .Release.Name }}-postgresql:5432/{{ .Values.postgres.auth.database }}
+{{- end -}}
+{{- end -}}
