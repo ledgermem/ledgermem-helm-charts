@@ -82,3 +82,21 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+      # Spread API replicas across nodes / zones so a single node or AZ
+      # outage doesn't take the whole API tier down. ScheduleAnyway keeps
+      # the deployment from getting stuck on small clusters.
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: ScheduleAnyway
+          labelSelector:
+            matchLabels:
+              {{- include "ledgermem.selectorLabels" . | nindent 14 }}
+              app.kubernetes.io/component: api
+        - maxSkew: 1
+          topologyKey: topology.kubernetes.io/zone
+          whenUnsatisfiable: ScheduleAnyway
+          labelSelector:
+            matchLabels:
+              {{- include "ledgermem.selectorLabels" . | nindent 14 }}
+              app.kubernetes.io/component: api

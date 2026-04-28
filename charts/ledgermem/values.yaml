@@ -95,6 +95,9 @@ autoscaling:
   minReplicas: 2
   maxReplicas: 10
   targetCPUUtilizationPercentage: 70
+  # Memory pressure is a stronger signal than CPU for embedding workloads;
+  # leave unset to skip and stick to CPU-only.
+  targetMemoryUtilizationPercentage: 80
 
 nodeSelector: {}
 tolerations: []
