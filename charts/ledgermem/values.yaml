@@ -79,6 +79,9 @@ monitoring:
 backup:
   enabled: false
   schedule: "0 2 * * *"
+  image:
+    repository: ghcr.io/ledgermem/backup
+    tag: ""        # defaults to .Chart.AppVersion (pinned, not :latest)
   s3:
     bucket: ""
     region: ""

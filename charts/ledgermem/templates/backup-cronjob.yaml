@@ -15,13 +15,29 @@ spec:
       template:
         spec:
           restartPolicy: OnFailure
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 1000
+            seccompProfile:
+              type: RuntimeDefault
           containers:
             - name: backup
-              image: ghcr.io/ledgermem/backup:latest
+              image: "{{ .Values.backup.image.repository | default "ghcr.io/ledgermem/backup" }}:{{ .Values.backup.image.tag | default .Chart.AppVersion }}"
+              imagePullPolicy: IfNotPresent
+              securityContext:
+                allowPrivilegeEscalation: false
+                readOnlyRootFilesystem: true
+                capabilities:
+                  drop: ["ALL"]
+              resources:
+                requests: { cpu: 100m, memory: 256Mi }
+                limits:   { cpu: 1,    memory: 1Gi }
               args:
                 - snapshot
                 - --to
-                - "s3://{{ .Values.backup.s3.bucket }}/$(date +%Y/%m/%d)/"
+                # Include timestamp + random suffix so concurrent / retried runs
+                # never overwrite a prior backup at the same date prefix.
+                - "s3://{{ .Values.backup.s3.bucket }}/$(date -u +%Y/%m/%d/%H%M%S)-${HOSTNAME}/"
               env:
                 - name: AWS_REGION
                   value: {{ .Values.backup.s3.region | quote }}
