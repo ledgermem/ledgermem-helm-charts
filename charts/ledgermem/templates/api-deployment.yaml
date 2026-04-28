@@ -49,8 +49,11 @@ spec:
             - name: {{ $k }}
               value: {{ $v | quote }}
             {{- end }}
-            - name: DATABASE_URL
-              value: {{ include "ledgermem.databaseUri" . | quote }}
+            # POSTGRES_PASSWORD must be declared BEFORE DATABASE_URL — the
+            # kubelet only resolves $(VAR) references in `value:` against env
+            # entries that appear earlier in the list. Reversing the order
+            # leaves DATABASE_URL containing the literal string
+            # `$(POSTGRES_PASSWORD)` and the API fails to connect.
             {{- if .Values.postgres.enabled }}
             - name: POSTGRES_PASSWORD
               valueFrom:
@@ -58,6 +61,8 @@ spec:
                   name: {{ .Release.Name }}-postgresql
                   key: postgres-password
             {{- end }}
+            - name: DATABASE_URL
+              value: {{ include "ledgermem.databaseUri" . | quote }}
           readinessProbe:
             httpGet:
               path: /healthz
