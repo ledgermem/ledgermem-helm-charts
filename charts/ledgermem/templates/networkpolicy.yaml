@@ -6,9 +6,9 @@
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
-  name: {{ include "ledgermem.fullname" . }}-default-deny
+  name: {{ include "getmnemo.fullname" . }}-default-deny
   labels:
-    {{- include "ledgermem.labels" . | nindent 4 }}
+    {{- include "getmnemo.labels" . | nindent 4 }}
 spec:
   podSelector: {}
   policyTypes: [Ingress, Egress]
@@ -16,13 +16,13 @@ spec:
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
-  name: {{ include "ledgermem.fullname" . }}
+  name: {{ include "getmnemo.fullname" . }}
   labels:
-    {{- include "ledgermem.labels" . | nindent 4 }}
+    {{- include "getmnemo.labels" . | nindent 4 }}
 spec:
   podSelector:
     matchLabels:
-      {{- include "ledgermem.selectorLabels" . | nindent 6 }}
+      {{- include "getmnemo.selectorLabels" . | nindent 6 }}
   policyTypes: [Ingress, Egress]
   ingress:
     - from:

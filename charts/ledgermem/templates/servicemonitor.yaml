@@ -2,13 +2,13 @@
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
-  name: {{ include "ledgermem.fullname" . }}
+  name: {{ include "getmnemo.fullname" . }}
   labels:
-    {{- include "ledgermem.labels" . | nindent 4 }}
+    {{- include "getmnemo.labels" . | nindent 4 }}
 spec:
   selector:
     matchLabels:
-      {{- include "ledgermem.selectorLabels" . | nindent 6 }}
+      {{- include "getmnemo.selectorLabels" . | nindent 6 }}
   endpoints:
     - port: http
       path: /metrics

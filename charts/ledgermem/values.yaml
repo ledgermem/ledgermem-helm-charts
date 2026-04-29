@@ -1,12 +1,12 @@
 image:
-  repository: ghcr.io/ledgermem/api
+  repository: ghcr.io/getmnemo/api
   tag: ""
   pullPolicy: IfNotPresent
   pullSecrets: []
 
 worker:
   image:
-    repository: ghcr.io/ledgermem/worker
+    repository: ghcr.io/getmnemo/worker
     tag: ""
 
 replicaCount: 2
@@ -52,8 +52,8 @@ postgres:
       enabled: true
       size: 50Gi
   auth:
-    database: ledgermem
-    username: ledgermem
+    database: getmnemo
+    username: getmnemo
   image:
     tag: 16-debian-12
 externalPostgres:
@@ -80,7 +80,7 @@ backup:
   enabled: false
   schedule: "0 2 * * *"
   image:
-    repository: ghcr.io/ledgermem/backup
+    repository: ghcr.io/getmnemo/backup
     tag: ""        # defaults to .Chart.AppVersion (pinned, not :latest)
   s3:
     bucket: ""

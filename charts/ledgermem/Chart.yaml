@@ -1,13 +1,13 @@
 apiVersion: v2
-name: ledgermem
-description: Self-hosted LedgerMem Memory — long-term memory infrastructure for AI agents.
+name: getmnemo
+description: Self-hosted Mnemo Memory — long-term memory infrastructure for AI agents.
 type: application
 version: 0.1.0
 appVersion: "0.1.0"
-home: https://proofly.dev
+home: https://getmnemo.xyz
 sources:
-  - https://github.com/ledgermem/ledgermem-helm-charts
-  - https://github.com/ledgermem/ledgermem-enterprise
+  - https://github.com/getmnemo/getmnemo-helm-charts
+  - https://github.com/getmnemo/getmnemo-enterprise
 keywords:
   - memory
   - llm
@@ -15,9 +15,9 @@ keywords:
   - rag
   - vector
 maintainers:
-  - name: LedgerMem
-    email: founders@proofly.dev
-icon: https://proofly.dev/og/index.svg
+  - name: Mnemo
+    email: founders@getmnemo.xyz
+icon: https://getmnemo.xyz/og/index.svg
 dependencies:
   - name: postgresql
     version: 15.5.27

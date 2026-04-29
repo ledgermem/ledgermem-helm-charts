@@ -1,9 +1,9 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "ledgermem.fullname" . }}-api
+  name: {{ include "getmnemo.fullname" . }}-api
   labels:
-    {{- include "ledgermem.labels" . | nindent 4 }}
+    {{- include "getmnemo.labels" . | nindent 4 }}
     app.kubernetes.io/component: api
 spec:
   {{- if not .Values.autoscaling.enabled }}
@@ -11,12 +11,12 @@ spec:
   {{- end }}
   selector:
     matchLabels:
-      {{- include "ledgermem.selectorLabels" . | nindent 6 }}
+      {{- include "getmnemo.selectorLabels" . | nindent 6 }}
       app.kubernetes.io/component: api
   template:
     metadata:
       labels:
-        {{- include "ledgermem.selectorLabels" . | nindent 8 }}
+        {{- include "getmnemo.selectorLabels" . | nindent 8 }}
         app.kubernetes.io/component: api
     spec:
       {{- with .Values.image.pullSecrets }}
@@ -62,7 +62,7 @@ spec:
                   key: postgres-password
             {{- end }}
             - name: DATABASE_URL
-              value: {{ include "ledgermem.databaseUri" . | quote }}
+              value: {{ include "getmnemo.databaseUri" . | quote }}
           readinessProbe:
             httpGet:
               path: /healthz
@@ -96,12 +96,12 @@ spec:
           whenUnsatisfiable: ScheduleAnyway
           labelSelector:
             matchLabels:
-              {{- include "ledgermem.selectorLabels" . | nindent 14 }}
+              {{- include "getmnemo.selectorLabels" . | nindent 14 }}
               app.kubernetes.io/component: api
         - maxSkew: 1
           topologyKey: topology.kubernetes.io/zone
           whenUnsatisfiable: ScheduleAnyway
           labelSelector:
             matchLabels:
-              {{- include "ledgermem.selectorLabels" . | nindent 14 }}
+              {{- include "getmnemo.selectorLabels" . | nindent 14 }}
               app.kubernetes.io/component: api

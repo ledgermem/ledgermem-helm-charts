@@ -2,13 +2,13 @@
 apiVersion: policy/v1
 kind: PodDisruptionBudget
 metadata:
-  name: {{ include "ledgermem.fullname" . }}-api
+  name: {{ include "getmnemo.fullname" . }}-api
   labels:
-    {{- include "ledgermem.labels" . | nindent 4 }}
+    {{- include "getmnemo.labels" . | nindent 4 }}
 spec:
   minAvailable: {{ .Values.podDisruptionBudget.minAvailable }}
   selector:
     matchLabels:
-      {{- include "ledgermem.selectorLabels" . | nindent 6 }}
+      {{- include "getmnemo.selectorLabels" . | nindent 6 }}
       app.kubernetes.io/component: api
 {{- end }}

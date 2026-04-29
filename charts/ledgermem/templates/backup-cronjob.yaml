@@ -2,9 +2,9 @@
 apiVersion: batch/v1
 kind: CronJob
 metadata:
-  name: {{ include "ledgermem.fullname" . }}-backup
+  name: {{ include "getmnemo.fullname" . }}-backup
   labels:
-    {{- include "ledgermem.labels" . | nindent 4 }}
+    {{- include "getmnemo.labels" . | nindent 4 }}
 spec:
   schedule: {{ .Values.backup.schedule | quote }}
   concurrencyPolicy: Forbid
@@ -22,7 +22,7 @@ spec:
               type: RuntimeDefault
           containers:
             - name: backup
-              image: "{{ .Values.backup.image.repository | default "ghcr.io/ledgermem/backup" }}:{{ .Values.backup.image.tag | default .Chart.AppVersion }}"
+              image: "{{ .Values.backup.image.repository | default "ghcr.io/getmnemo/backup" }}:{{ .Values.backup.image.tag | default .Chart.AppVersion }}"
               imagePullPolicy: IfNotPresent
               securityContext:
                 allowPrivilegeEscalation: false
@@ -58,5 +58,5 @@ spec:
                       key: secret-access-key
                 {{- end }}
                 - name: DATABASE_URL
-                  value: {{ include "ledgermem.databaseUri" . | quote }}
+                  value: {{ include "getmnemo.databaseUri" . | quote }}
 {{- end }}

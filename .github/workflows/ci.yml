@@ -13,12 +13,12 @@ jobs:
         with:
           version: v3.14.4
       - name: helm lint
-        run: helm lint charts/ledgermem
+        run: helm lint charts/getmnemo
       - name: helm template (default)
-        run: helm template charts/ledgermem | head -200
+        run: helm template charts/getmnemo | head -200
       - name: helm template (production-like)
         run: |
-          helm template charts/ledgermem \
+          helm template charts/getmnemo \
             --set autoscaling.enabled=true \
             --set ingress.enabled=true \
             --set monitoring.serviceMonitor=true \

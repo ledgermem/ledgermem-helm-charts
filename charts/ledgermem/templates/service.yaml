@@ -1,9 +1,9 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "ledgermem.fullname" . }}-api
+  name: {{ include "getmnemo.fullname" . }}-api
   labels:
-    {{- include "ledgermem.labels" . | nindent 4 }}
+    {{- include "getmnemo.labels" . | nindent 4 }}
 spec:
   type: {{ .Values.service.type }}
   ports:
@@ -12,5 +12,5 @@ spec:
       protocol: TCP
       name: http
   selector:
-    {{- include "ledgermem.selectorLabels" . | nindent 4 }}
+    {{- include "getmnemo.selectorLabels" . | nindent 4 }}
     app.kubernetes.io/component: api

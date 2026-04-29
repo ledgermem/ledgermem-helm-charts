@@ -2,9 +2,9 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: {{ include "ledgermem.fullname" . }}
+  name: {{ include "getmnemo.fullname" . }}
   labels:
-    {{- include "ledgermem.labels" . | nindent 4 }}
+    {{- include "getmnemo.labels" . | nindent 4 }}
   {{- with .Values.ingress.annotations }}
   annotations:
     {{- toYaml . | nindent 4 }}
@@ -15,7 +15,7 @@ spec:
   tls:
     - hosts:
         - {{ .Values.ingress.host }}
-      secretName: {{ include "ledgermem.fullname" . }}-tls
+      secretName: {{ include "getmnemo.fullname" . }}-tls
   {{- end }}
   rules:
     - host: {{ .Values.ingress.host }}
@@ -25,7 +25,7 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: {{ include "ledgermem.fullname" . }}-api
+                name: {{ include "getmnemo.fullname" . }}-api
                 port:
                   number: {{ .Values.service.port }}
 {{- end }}
